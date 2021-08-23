@@ -1,7 +1,14 @@
+/**
+ * The IIFE Table create function.
+ */
 (function tableCreate() {
   let body = document.body;
   let table = document.createElement('table');
 
+  /**
+   * The function expression for handling click event.
+   * @param e {Object} The current cell.
+   */
   const handleClick = (e) => {
     console.time(`${e.currentTarget} click ms`);
     console.log(`click on ${e.currentTarget} number --`, e.target.innerText);
@@ -11,9 +18,12 @@
   table.addEventListener('click', handleClick);
   body.addEventListener('click', handleClick);
 
-  for (let i = 0; i < 10; i++) {
+  /**
+   * The table generation loop.
+   */
+  for (let i = 0; i < 100; i++) {
     let tableRow = table.insertRow();
-    for (let j = 0; j < 10; j++) {
+    for (let j = 0; j < 100; j++) {
       let tableCol = tableRow.insertCell();
       let cell = document.createTextNode(`${i},${j}`);
       tableCol.appendChild(cell);
@@ -29,48 +39,59 @@
   }
 
   body.appendChild(table);
+
+  const tds = document.querySelectorAll('td');
+  for (const td of tds) {
+    td.addEventListener('dragover', dragOver);
+    td.addEventListener('dragenter', dragEnter);
+    td.addEventListener('drop', dragDrop);
+  }
+
 })();
 
-const tds = document.querySelectorAll('td');
-for (const td of tds) {
-  td.addEventListener('dragover', dragOver);
-  td.addEventListener('dragenter', dragEnter);
-  td.addEventListener('dragleave', dragLeave);
-  td.addEventListener('drop', dragDrop);
-
-}
-
 let firstTarget;
-let secondTarget = ' ';
+let secondTarget = 'start';
 
+/**
+ * Starts the dragging.
+ * @param e {Object} The cell to drag.
+ */
 function dragStart(e) {
-  this.className += ' hold';
   firstTarget = e.target.innerText;
   this.prepend(secondTarget);
   this.removeChild(this.lastChild);
-  setTimeout(() => (this.className = 'invisible'), 0);
 }
 
+/**
+ * Ends the dragging event.
+ */
 function dragEnd() {
   this.className = 'td';
 }
 
+/**
+ * Handles the dragging over cells.
+ * @param e {Object} The cell to drag.
+ */
 function dragOver(e) {
   e.preventDefault();
 }
 
+/**
+ * Handles the drag enter.
+ * @param e {Object} The cell to drag.
+ */
 function dragEnter(e) {
   e.preventDefault();
-  this.className += ' hovered';
 }
 
-function dragLeave() {
-  this.className = 'empty';
-}
-
+/**
+ * Handles the drop.
+ * @param e {Object} The cell to drop.
+ */
 function dragDrop(e) {
   this.className = 'empty';
-  secondTarget =  e.target.innerText;
+   secondTarget = e.target.innerText;
   this.prepend(firstTarget);
-  this.removeChild(this.lastChild)
+  this.removeChild(this.lastChild);
 }
