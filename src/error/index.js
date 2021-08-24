@@ -1,11 +1,9 @@
+/**
+ * The MyCustomError class.
+ */
 class MyCustomError extends Error {
   constructor(myProp = "myName", ...params) {
     super(...params);
-
-    if (Error.captureStackTrace) {
-      Error.captureStackTrace(this, MyCustomError);
-    }
-
     this.name = "MyCustomError";
     this.myProp = myProp;
     this.date = new Date();
